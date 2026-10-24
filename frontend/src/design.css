@@ -1,0 +1,64 @@
+/* design.css – Global design tokens */
+:root {
+  /* Color palette */
+  --color-cream: #F7F4EE;
+  --color-parchment: #FAF8F4;
+  --color-linen: #E8DED1;
+  --color-forest: #2F4F3E; /* primary brand */
+  --color-moss: #53785F;   /* secondary brand */
+  --color-clay: #C46A2D;   /* accent */
+  --color-ember: #E18A46;  /* warm accent */
+  --color-ink: #1F261F;    /* high contrast text */
+  --color-muted: #7F7A70;  /* secondary metadata */
+
+  /* Typography */
+  --font-serif: 'Playfair Display', serif;
+  --font-sans: 'Inter', sans-serif;
+  --font-script: 'Caveat', cursive;
+
+  /* Shadows */
+  --shadow-travel: 0 10px 30px rgba(0, 0, 0, 0.06);
+  --shadow-float: 0 18px 55px rgba(47, 79, 62, 0.16);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/* Light theme (default) */
+body {
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+/* Dark mode – toggle with .dark class on <html> */
+html.dark {
+  --color-cream: #1F261F;   /* dark background */
+  --color-ink: #FAF8F4;     /* light text */
+  background-color: var(--color-cream);
+  color: var(--color-ink);
+}
+
+/* Utility classes */
+.bg-parchment { background-color: var(--color-parchment); }
+.bg-forest { background-color: var(--color-forest); color: #fff; }
+.bg-moss { background-color: var(--color-moss); color: #fff; }
+.bg-clay { background-color: var(--color-clay); color: #fff; }
+.bg-ember { background-color: var(--color-ember); color: #fff; }
+
+.text-ink { color: var(--color-ink); }
+.text-muted { color: var(--color-muted); }
+
+.shadow-travel { box-shadow: var(--shadow-travel); }
+.shadow-float { box-shadow: var(--shadow-float); }
+.shadow-sm { box-shadow: var(--shadow-sm); }
+
+.rounded { border-radius: 0.5rem; }
+.p-4 { padding: 1rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+
+/* Glassmorphism overlay */
+.glass {
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--color-linen);
+}
