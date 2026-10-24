@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "task-on-71a95"
-  }
+  },
+  "targets": {
+    "task-on-71a95": {
+      "hosting": {
+        "app": [
+          "task-on-app"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
