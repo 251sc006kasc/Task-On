@@ -18,8 +18,9 @@ dist-ssr
 !.env.example
 !.env.production
 
-# Vercel
+# Vercel & Firebase
 .vercel
+.firebase
 
 # Editor
 .vscode
