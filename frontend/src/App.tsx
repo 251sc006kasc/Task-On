@@ -407,14 +407,6 @@ export default function App() {
           >
             Continue as Guest
           </button>
-
-          {/* API Status */}
-          <div className="auth-footer-status">
-            <span className={`status-dot ${backendStatus === 'connected' ? 'connected' : 'offline'}`} />
-            <span className="status-text">
-              {backendStatus === 'connected' ? 'API Connected' : 'Local Mode'}
-            </span>
-          </div>
         </motion.div>
       </div>
     );
