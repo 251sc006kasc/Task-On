@@ -6,7 +6,7 @@
 
 ## 🌐 Live Deployments
 
-- **Frontend (Firebase Hosting):** [https://task-on-71a95.web.app](https://task-on-71a95.web.app)
+- **Frontend (Firebase Hosting):** [https://task-on-app.web.app](https://task-on-app.web.app) *(also accessible via [https://task-on-71a95.web.app](https://task-on-71a95.web.app))*
 - **Backend API (Vercel):** [https://backend-taupe-mu-58.vercel.app](https://backend-taupe-mu-58.vercel.app)
 - **Database:** MongoDB Atlas Cloud Cluster
 

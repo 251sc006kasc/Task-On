@@ -6,7 +6,7 @@ function renderApiDocumentation({ isApiEndpoint = false, rawJson = null } = {}) 
     version: "1.0.0",
     platform: "Vercel Serverless Functions",
     database: "MongoDB Atlas Cloud Cluster",
-    frontendUrl: "https://task-on-71a95.web.app",
+    frontendUrl: "https://task-on-app.web.app",
     endpoints: {
       auth: [
         {

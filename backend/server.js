@@ -59,7 +59,7 @@ app.get('/api', (req, res) => {
       version: '1.0.0',
       platform: 'Vercel Serverless Functions',
       database: 'MongoDB Atlas Cloud Cluster',
-      frontendUrl: 'https://task-on-71a95.web.app',
+      frontendUrl: 'https://task-on-app.web.app',
       endpoints: {
         auth: ['POST /api/auth/register', 'POST /api/auth/login'],
         tasks: ['GET /api/tasks', 'POST /api/tasks', 'PUT /api/tasks/:id', 'DELETE /api/tasks/:id']

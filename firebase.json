@@ -1,17 +1,6 @@
 {
-  "functions": [
-    {
-      "source": "backend",
-      "codebase": "default",
-      "ignore": [
-        "node_modules",
-        ".git",
-        "firebase-debug.log",
-        "firebase-debug.*.log"
-      ]
-    }
-  ],
   "hosting": {
+    "target": "app",
     "public": "frontend/dist",
     "ignore": [
       "firebase.json",
@@ -19,10 +8,6 @@
       "**/node_modules/**"
     ],
     "rewrites": [
-      {
-        "source": "/api/**",
-        "function": "api"
-      },
       {
         "source": "**",
         "destination": "/index.html"
