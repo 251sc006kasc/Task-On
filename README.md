@@ -7,7 +7,6 @@
 ## 🌐 Live Deployment Links
 
 - **Production Frontend (Firebase Hosting):** [https://task-on-app.web.app](https://task-on-app.web.app)
-  *(Mirror domain: [https://task-on-71a95.web.app](https://task-on-71a95.web.app))*
 - **Production Backend API (Vercel):** [https://backend-taupe-mu-58.vercel.app](https://backend-taupe-mu-58.vercel.app)
 - **Interactive API Documentation & Live JSON:** [https://backend-taupe-mu-58.vercel.app/#json](https://backend-taupe-mu-58.vercel.app/#json)
 - **GitHub Repository:** [https://github.com/251sc006kasc/Task-On](https://github.com/251sc006kasc/Task-On)
@@ -160,15 +159,3 @@ All screenshots are stored in this submission directory in JPEG format:
 ![Analytics Overview](06_analytics_overview.jpeg)
 
 ---
-
-## 🎥 Project Demonstration Video (MP4)
-
-A 2-minute walkthrough showing account registration, login, task creation, status toggles, editing, deletion, and cloud deployment is included:
-
-- **Filename:** `task_on_walkthrough.mp4` (Full HD 1080p, H.264/AAC MP4 format)
-- **File Location:** `submission guidelines/task_on_walkthrough.mp4`
-
----
-
-## 📄 License
-This project is open-source under the [MIT License](../LICENSE).
