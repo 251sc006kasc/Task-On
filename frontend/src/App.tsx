@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowRight,
+  LogOut,
   Home,
   CheckSquare,
   Calendar as CalendarIcon,
@@ -17,9 +18,18 @@ import {
   Trash2,
   X,
   Menu,
-  Check
+  Check,
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  Zap,
+  Users,
+  User as UserIcon
 } from 'lucide-react';
 import api from './api';
+import iconImg from './assets/icon.png';
+import heroLogoImg from './assets/hero-logo.png';
 import './App.css';
 
 /* ─── Types ─── */
@@ -84,6 +94,26 @@ const subtleFade = {
   transition: { duration: 0.18, ease: [0.25, 0.1, 0.25, 1] as [number, number, number, number] },
 };
 
+const heroContainerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.05,
+    },
+  },
+};
+
+const heroItemVariants = {
+  hidden: { opacity: 0, y: 14 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
+  },
+};
+
 const rowTransition = {
   initial: { opacity: 0, y: 4 },
   animate: { opacity: 1, y: 0, transition: { duration: 0.15 } },
@@ -97,6 +127,7 @@ export default function App() {
   const [authEmail, setAuthEmail] = useState('');
   const [authPassword, setAuthPassword] = useState('');
   const [authName, setAuthName] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [authError, setAuthError] = useState('');
   const [isAuthLoading, setIsAuthLoading] = useState(false);
 
@@ -296,118 +327,294 @@ export default function App() {
   }, [tasks]);
 
   /* ═══════════════════════════════════════════════
-     1. REGISTRATION / LOGIN PAGE (Centered Card)
+     1. AUTHENTICATION PAGE (Split Hero & Modern Card)
      ═══════════════════════════════════════════════ */
   if (!user) {
     return (
-      <div className="auth-container">
-        <motion.div className="auth-card" {...subtleFade}>
-          {/* Logo at the top-left of the card */}
-          <div className="auth-card-header">
-            <div className="brand-logo-wrap">
-              <span className="brand-logo-mark">T</span>
-              <span className="brand-logo-text">Task-On</span>
-            </div>
-          </div>
-
-          {/* Heading */}
-          <h2 className="auth-heading">
-            {authMode === 'signin' ? 'Sign in to your account' : 'Create your account'}
-          </h2>
-
-          {/* Segmented Sign In / Register Tabs */}
-          <div className="auth-segmented-tabs">
-            <button
-              type="button"
-              className={`auth-tab-btn ${authMode === 'signin' ? 'active' : ''}`}
-              onClick={() => { setAuthMode('signin'); setAuthError(''); }}
-            >
-              Sign In
-            </button>
-            <button
-              type="button"
-              className={`auth-tab-btn ${authMode === 'register' ? 'active' : ''}`}
-              onClick={() => { setAuthMode('register'); setAuthError(''); }}
-            >
-              Register
-            </button>
-          </div>
-
-          {authError && (
-            <motion.div className="auth-error-box" {...subtleFade}>
-              {authError}
-            </motion.div>
-          )}
-
-          {/* Form */}
-          <form className="auth-form" onSubmit={handleAuthSubmit}>
-            {authMode === 'register' && (
-              <div className="form-group">
-                <label className="form-label" htmlFor="auth-name">Full Name</label>
-                <input
-                  id="auth-name"
-                  type="text"
-                  className="form-input"
-                  required
-                  placeholder="Your name"
-                  value={authName}
-                  onChange={(e) => setAuthName(e.target.value)}
-                />
-              </div>
-            )}
-
-            <div className="form-group">
-              <label className="form-label" htmlFor="auth-email">Email</label>
-              <input
-                id="auth-email"
-                type="email"
-                className="form-input"
-                required
-                placeholder="name@company.com"
-                value={authEmail}
-                onChange={(e) => setAuthEmail(e.target.value)}
-                autoFocus
-              />
-            </div>
-
-            <div className="form-group">
-              <label className="form-label" htmlFor="auth-password">Password</label>
-              <input
-                id="auth-password"
-                type="password"
-                className="form-input"
-                required
-                placeholder="••••••••"
-                value={authPassword}
-                onChange={(e) => setAuthPassword(e.target.value)}
-              />
-            </div>
-
-            {/* Dark green Submit Button with small arrow icon */}
-            <button
-              type="submit"
-              className="btn-primary-green"
-              disabled={isAuthLoading}
-            >
-              <span>{isAuthLoading ? 'Processing…' : authMode === 'signin' ? 'Sign In' : 'Create Account'}</span>
-              <ArrowRight size={15} strokeWidth={2.2} />
-            </button>
-          </form>
-
-          {/* OR Divider */}
-          <div className="auth-divider">
-            <span>OR</span>
-          </div>
-
-          {/* Continue as Guest Button */}
-          <button
-            type="button"
-            className="btn-secondary-guest"
-            onClick={handleContinueAsGuest}
+      <div className="auth-layout">
+        {/* Left Side: Brand Story & Workspace Visual */}
+        <div className="auth-hero-section">
+          <div className="auth-hero-overlay" />
+          <motion.div
+            className="auth-hero-container"
+            variants={heroContainerVariants}
+            initial="hidden"
+            animate="visible"
           >
-            Continue as Guest
-          </button>
-        </motion.div>
+            {/* Top Brand Logo */}
+            <motion.div className="auth-hero-header" variants={heroItemVariants}>
+              <img src={heroLogoImg} alt="Task-On Logo" className="hero-brand-icon-img" />
+              <span className="hero-brand-title">Task-On</span>
+            </motion.div>
+
+            {/* Main Statement */}
+            <div className="auth-hero-center">
+              <motion.h1 className="hero-headline" variants={heroItemVariants}>
+                Make room for<br />
+                what <span className="hero-headline-highlight">matters.</span>
+              </motion.h1>
+              <motion.p className="hero-subheadline" variants={heroItemVariants}>
+                Task-On helps you stay focused, organized and in control — every day.
+              </motion.p>
+
+              {/* Value Props */}
+              <div className="hero-value-props">
+                <motion.div
+                  className="value-prop-item"
+                  variants={heroItemVariants}
+                  whileHover={{ x: 6 }}
+                  transition={{ type: 'spring', stiffness: 350, damping: 22 }}
+                >
+                  <div className="value-prop-icon">
+                    <Zap size={20} strokeWidth={2.2} />
+                  </div>
+                  <div className="value-prop-content">
+                    <h3 className="value-prop-title">Plan Smarter</h3>
+                    <p className="value-prop-desc">Organize your tasks, set priorities and get things done.</p>
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  className="value-prop-item"
+                  variants={heroItemVariants}
+                  whileHover={{ x: 6 }}
+                  transition={{ type: 'spring', stiffness: 350, damping: 22 }}
+                >
+                  <div className="value-prop-icon">
+                    <CalendarIcon size={20} strokeWidth={2.2} />
+                  </div>
+                  <div className="value-prop-content">
+                    <h3 className="value-prop-title">Stay On Track</h3>
+                    <p className="value-prop-desc">Never miss a deadline with reminders and progress tracking.</p>
+                  </div>
+                </motion.div>
+
+                <motion.div
+                  className="value-prop-item"
+                  variants={heroItemVariants}
+                  whileHover={{ x: 6 }}
+                  transition={{ type: 'spring', stiffness: 350, damping: 22 }}
+                >
+                  <div className="value-prop-icon">
+                    <Users size={20} strokeWidth={2.2} />
+                  </div>
+                  <div className="value-prop-content">
+                    <h3 className="value-prop-title">Work Together</h3>
+                    <p className="value-prop-desc">Collaborate and achieve more with your team.</p>
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+
+            {/* Bottom visual breathing room */}
+            <div className="auth-hero-footer" />
+          </motion.div>
+        </div>
+
+        {/* Right Side: Auth Card Area */}
+        <div className="auth-form-section">
+          <motion.div
+            className="auth-card-panel"
+            initial={{ opacity: 0, y: 18, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {/* Centered Brand Mark */}
+            <motion.div
+              className="auth-card-brand"
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.08, duration: 0.3, ease: 'easeOut' }}
+            >
+              <img src={iconImg} alt="Task-On Logo" className="auth-card-brand-img" />
+              <span className="auth-card-logo-text">Task-On</span>
+            </motion.div>
+
+            {/* Heading with smooth crossfade */}
+            <div style={{ minHeight: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <AnimatePresence mode="wait">
+                <motion.h2
+                  key={authMode}
+                  className="auth-card-title"
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 6 }}
+                  transition={{ duration: 0.18 }}
+                  style={{ marginBottom: 0 }}
+                >
+                  {authMode === 'signin' ? 'Sign in to your account' : 'Create your account'}
+                </motion.h2>
+              </AnimatePresence>
+            </div>
+
+            {/* Segmented Switch Tabs with smooth Framer Motion layout pill */}
+            <div className="auth-segmented-pill" style={{ marginTop: '24px' }}>
+              <button
+                type="button"
+                className={`auth-pill-btn ${authMode === 'signin' ? 'active' : ''}`}
+                onClick={() => { setAuthMode('signin'); setAuthError(''); }}
+              >
+                {authMode === 'signin' && (
+                  <motion.div
+                    layoutId="authActivePill"
+                    className="auth-pill-active-bg"
+                    transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                  />
+                )}
+                <span className="auth-pill-text">Sign In</span>
+              </button>
+              <button
+                type="button"
+                className={`auth-pill-btn ${authMode === 'register' ? 'active' : ''}`}
+                onClick={() => { setAuthMode('register'); setAuthError(''); }}
+              >
+                {authMode === 'register' && (
+                  <motion.div
+                    layoutId="authActivePill"
+                    className="auth-pill-active-bg"
+                    transition={{ type: 'spring', stiffness: 500, damping: 35 }}
+                  />
+                )}
+                <span className="auth-pill-text">Register</span>
+              </button>
+            </div>
+
+            {/* Error Message with shake and smooth enter/exit */}
+            <AnimatePresence>
+              {authError && (
+                <motion.div
+                  className="auth-error-banner"
+                  initial={{ opacity: 0, y: -8, scale: 0.96 }}
+                  animate={{
+                    opacity: 1,
+                    y: 0,
+                    scale: 1,
+                    x: [0, -6, 6, -4, 4, -1, 1, 0],
+                  }}
+                  exit={{ opacity: 0, y: -8, scale: 0.96 }}
+                  transition={{
+                    opacity: { duration: 0.18 },
+                    scale: { duration: 0.18 },
+                    x: { duration: 0.38, ease: 'easeOut' },
+                  }}
+                >
+                  {authError}
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Form */}
+            <form className="auth-form-fields" onSubmit={handleAuthSubmit}>
+              <AnimatePresence initial={false}>
+                {authMode === 'register' && (
+                  <motion.div
+                    key="register-name-field"
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.24, ease: [0.16, 1, 0.3, 1] }}
+                    style={{ overflow: 'hidden' }}
+                  >
+                    <div className="auth-field-group">
+                      <label className="auth-field-label" htmlFor="auth-name">FULL NAME</label>
+                      <div className="auth-input-container">
+                        <UserIcon size={18} className="auth-input-leading-icon" />
+                        <input
+                          id="auth-name"
+                          type="text"
+                          className="auth-text-input with-icon"
+                          required
+                          placeholder="Jane Doe"
+                          value={authName}
+                          onChange={(e) => setAuthName(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <div className="auth-field-group">
+                <label className="auth-field-label" htmlFor="auth-email">EMAIL</label>
+                <div className="auth-input-container">
+                  <Mail size={18} className="auth-input-leading-icon" />
+                  <input
+                    id="auth-email"
+                    type="email"
+                    className="auth-text-input with-icon"
+                    required
+                    placeholder="name@company.com"
+                    value={authEmail}
+                    onChange={(e) => setAuthEmail(e.target.value)}
+                    autoFocus
+                  />
+                </div>
+              </div>
+
+              <div className="auth-field-group">
+                <label className="auth-field-label" htmlFor="auth-password">PASSWORD</label>
+                <div className="auth-input-container">
+                  <Lock size={18} className="auth-input-leading-icon" />
+                  <input
+                    id="auth-password"
+                    type={showPassword ? 'text' : 'password'}
+                    className="auth-text-input with-icon with-trailing"
+                    required
+                    placeholder="Enter your password"
+                    value={authPassword}
+                    onChange={(e) => setAuthPassword(e.target.value)}
+                  />
+                  <motion.button
+                    type="button"
+                    className="auth-password-toggle-btn"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    whileHover={{ scale: 1.15 }}
+                    whileTap={{ scale: 0.88 }}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </motion.button>
+                </div>
+              </div>
+
+              {/* Dark Green Submit Button */}
+              <motion.button
+                type="submit"
+                className="auth-primary-submit-btn"
+                disabled={isAuthLoading}
+                whileHover={!isAuthLoading ? { scale: 1.015 } : {}}
+                whileTap={!isAuthLoading ? { scale: 0.985 } : {}}
+                transition={{ type: 'spring', stiffness: 450, damping: 25 }}
+              >
+                <span>{isAuthLoading ? 'Processing…' : authMode === 'signin' ? 'Sign In' : 'Create Account'}</span>
+                <motion.span
+                  animate={isAuthLoading ? { rotate: 360 } : { rotate: 0 }}
+                  transition={isAuthLoading ? { repeat: Infinity, duration: 0.8, ease: 'linear' } : {}}
+                  style={{ display: 'inline-flex', alignItems: 'center' }}
+                >
+                  <ArrowRight size={17} strokeWidth={2.4} />
+                </motion.span>
+              </motion.button>
+            </form>
+
+            {/* OR Divider */}
+            <div className="auth-line-divider">
+              <span>OR</span>
+            </div>
+
+            {/* Continue as Guest Button */}
+            <motion.button
+              type="button"
+              className="auth-guest-btn"
+              onClick={handleContinueAsGuest}
+              whileHover={{ scale: 1.015, borderColor: '#CBD5E1' }}
+              whileTap={{ scale: 0.985 }}
+              transition={{ type: 'spring', stiffness: 450, damping: 25 }}
+            >
+              Continue as Guest
+            </motion.button>
+          </motion.div>
+        </div>
       </div>
     );
   }
@@ -429,17 +636,12 @@ export default function App() {
             <Menu size={18} />
           </button>
           <div className="brand-logo-wrap">
-            <span className="brand-logo-mark">T</span>
+            <img src={iconImg} alt="Task-On Logo" className="brand-logo-img" />
             <span className="brand-logo-text">Task-On</span>
           </div>
         </div>
 
         <div className="header-right">
-          <div className="synced-indicator">
-            <span className={`status-dot ${backendStatus === 'connected' ? 'connected' : 'offline'}`} />
-            <span>{backendStatus === 'connected' ? 'Synced' : 'Local'}</span>
-          </div>
-
           <div className="user-profile">
             <div className="avatar-circle">
               {user.name.charAt(0).toUpperCase()}
@@ -451,8 +653,10 @@ export default function App() {
             type="button"
             className="btn-logout"
             onClick={handleLogout}
+            title="Log out of account"
           >
-            Log out
+            <LogOut size={13} strokeWidth={2.2} />
+            <span>Log out</span>
           </button>
         </div>
       </header>
@@ -779,8 +983,14 @@ export default function App() {
                   <strong>Signed in as</strong>
                   <p>{user.email}</p>
                 </div>
-                <button type="button" className="btn-secondary-guest" onClick={handleLogout}>
-                  Log out
+                <button
+                  type="button"
+                  className="btn-logout"
+                  onClick={handleLogout}
+                  title="Log out of account"
+                >
+                  <LogOut size={13} strokeWidth={2.2} />
+                  <span>Log out</span>
                 </button>
               </div>
             </motion.div>
@@ -800,30 +1010,36 @@ export default function App() {
           >
             <motion.div
               className="modal-box"
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.96 }}
-              transition={{ duration: 0.16 }}
+              initial={{ opacity: 0, scale: 0.95, y: 8 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 8 }}
+              transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
               onClick={(e) => e.stopPropagation()}
             >
               <div className="modal-header">
-                <h3 className="modal-title">Edit Task</h3>
+                <div className="modal-title-wrap">
+                  <Edit3 size={18} className="modal-header-icon" />
+                  <h3 className="modal-title">Edit Task</h3>
+                </div>
                 <button
                   type="button"
                   className="modal-close-btn"
                   onClick={() => setEditingTask(null)}
+                  aria-label="Close modal"
                 >
-                  <X size={16} />
+                  <X size={17} />
                 </button>
               </div>
 
               <form onSubmit={handleUpdateTask} className="modal-form">
                 <div className="form-group">
-                  <label className="form-label">Title</label>
+                  <label className="form-label" htmlFor="edit-task-title">Task Title</label>
                   <input
+                    id="edit-task-title"
                     type="text"
                     className="form-input"
                     required
+                    placeholder="Enter task title"
                     value={editingTask.title}
                     onChange={(e) => setEditingTask({ ...editingTask, title: e.target.value })}
                   />
@@ -831,9 +1047,10 @@ export default function App() {
 
                 <div className="form-grid-2">
                   <div className="form-group">
-                    <label className="form-label">Priority</label>
+                    <label className="form-label" htmlFor="edit-task-priority">Priority</label>
                     <select
-                      className="form-input"
+                      id="edit-task-priority"
+                      className="form-input form-select"
                       value={editingTask.priority}
                       onChange={(e) => setEditingTask({ ...editingTask, priority: e.target.value as any })}
                     >
@@ -844,9 +1061,10 @@ export default function App() {
                   </div>
 
                   <div className="form-group">
-                    <label className="form-label">Status</label>
+                    <label className="form-label" htmlFor="edit-task-status">Status</label>
                     <select
-                      className="form-input"
+                      id="edit-task-status"
+                      className="form-input form-select"
                       value={editingTask.status}
                       onChange={(e) => setEditingTask({ ...editingTask, status: e.target.value as any })}
                     >
@@ -858,10 +1076,11 @@ export default function App() {
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Due Date</label>
+                  <label className="form-label" htmlFor="edit-task-date">Due Date</label>
                   <input
+                    id="edit-task-date"
                     type="date"
-                    className="form-input"
+                    className="form-input form-date"
                     value={editingTask.dueDate ? editingTask.dueDate.split('T')[0] : ''}
                     onChange={(e) => setEditingTask({ ...editingTask, dueDate: e.target.value })}
                   />
@@ -870,17 +1089,17 @@ export default function App() {
                 <div className="modal-buttons">
                   <button
                     type="button"
-                    className="btn-cancel"
+                    className="btn-modal-cancel"
                     onClick={() => setEditingTask(null)}
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="btn-primary-green"
-                    style={{ width: 'auto', padding: '0 18px', height: '36px' }}
+                    className="btn-modal-save"
                   >
-                    Save Changes
+                    <Check size={16} strokeWidth={2.4} />
+                    <span>Save Changes</span>
                   </button>
                 </div>
               </form>
