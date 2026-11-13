@@ -114,7 +114,7 @@ body {
 .auth-hero-section {
   flex: 1.15;
   position: relative;
-  background-image: url('./assets/login-hero.jpg');
+  background-image: url('./assets/login-hero.avif');
   background-size: cover;
   background-position: center bottom;
   background-repeat: no-repeat;
@@ -733,24 +733,24 @@ body {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  background-color: #DC2626;
-  border: 1px solid #DC2626;
-  color: #FFFFFF;
+  background-color: #FEF2F2;
+  border: 1px solid #FECACA;
+  color: #B91C1C;
   font-family: var(--font-sans);
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  padding: 6px 12px;
+  padding: 5px 11px;
   border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(220, 38, 38, 0.22);
+  box-shadow: 0 1px 2px rgba(185, 28, 28, 0.06);
   transition: all 0.15s ease;
 }
 
 .btn-logout:hover {
-  background-color: #B91C1C;
-  border-color: #B91C1C;
-  color: #FFFFFF;
-  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.32);
+  background-color: #FEE2E2;
+  border-color: #FCA5A5;
+  color: #991B1B;
+  box-shadow: 0 2px 6px rgba(185, 28, 28, 0.12);
   transform: translateY(-1px);
 }
 
@@ -1083,6 +1083,241 @@ body {
 .search-input::placeholder {
   color: var(--secondary-text);
   opacity: 0.65;
+}
+
+/* Filter Controls Right (Search + View Switcher) */
+.filter-controls-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* View Mode Toggle */
+.view-mode-toggle {
+  display: inline-flex;
+  align-items: center;
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 2px;
+  gap: 2px;
+  height: 34px;
+}
+
+.view-mode-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  font-size: 11.5px;
+  font-weight: 500;
+  font-family: var(--font-sans);
+  color: var(--secondary-text);
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  height: 28px;
+  white-space: nowrap;
+}
+
+.view-mode-btn:hover {
+  color: var(--dark-text);
+}
+
+.view-mode-btn.active {
+  background-color: var(--primary-green);
+  color: #FFFFFF;
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(40, 86, 66, 0.2);
+}
+
+/* ═══════════════════════════════════════════════
+   6. VISUAL TABLE & TASK LIST
+   ═══════════════════════════════════════════════ */
+.tasks-table-container {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  overflow-x: auto;
+  box-shadow: var(--shadow-subtle);
+  -webkit-overflow-scrolling: touch;
+}
+
+.tasks-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  min-width: 620px;
+}
+
+.tasks-table thead tr {
+  background-color: #F5EFE6;
+  border-bottom: 1.5px solid var(--border-color);
+}
+
+.tasks-table thead th {
+  padding: 12px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--dark-text);
+  white-space: nowrap;
+}
+
+.th-col-check {
+  width: 52px;
+  text-align: center;
+}
+
+.th-col-title {
+  min-width: 200px;
+}
+
+.th-col-status {
+  width: 130px;
+}
+
+.th-col-priority {
+  width: 110px;
+}
+
+.th-col-date {
+  width: 140px;
+}
+
+.th-col-actions {
+  width: 90px;
+  text-align: right;
+  padding-right: 18px !important;
+}
+
+.tasks-table-row {
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.12s ease;
+}
+
+.tasks-table-row:last-child {
+  border-bottom: none;
+}
+
+.tasks-table-row:hover {
+  background-color: #FAF8F4;
+}
+
+.tasks-table td {
+  padding: 12px 14px;
+  vertical-align: middle;
+  font-size: 13.5px;
+}
+
+.td-col-check {
+  text-align: center;
+  padding-right: 6px;
+}
+
+.td-col-check .task-checkbox {
+  margin: 0 auto;
+}
+
+.td-col-title {
+  font-weight: 500;
+  color: var(--dark-text);
+}
+
+.table-task-title {
+  display: block;
+  font-size: 13.5px;
+  color: var(--dark-text);
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.tasks-table-row.is-completed {
+  opacity: 0.65;
+}
+
+.tasks-table-row.is-completed .table-task-title {
+  text-decoration: line-through;
+  color: var(--secondary-text);
+}
+
+/* Status Badges in Table */
+.table-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+.status-dot-indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.table-status-pill.status-completed {
+  background-color: #E8F5E9;
+  color: #1B5E20;
+  border: 1px solid #C8E6C9;
+}
+.table-status-pill.status-completed .status-dot-indicator {
+  background-color: #2E7D32;
+}
+
+.table-status-pill.status-pending {
+  background-color: #FEF3C7;
+  color: #92400E;
+  border: 1px solid #FDE68A;
+}
+.table-status-pill.status-pending .status-dot-indicator {
+  background-color: #F59E0B;
+}
+
+.table-status-pill.status-in-progress {
+  background-color: #E0F2FE;
+  color: #0369A1;
+  border: 1px solid #BAE6FD;
+}
+.table-status-pill.status-in-progress .status-dot-indicator {
+  background-color: #0284C7;
+}
+
+/* Date in Table */
+.table-date-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  color: var(--secondary-text);
+  background-color: #F7F5F0;
+  border: 1px solid var(--border-color);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+}
+
+.table-empty-val {
+  color: #B5AFA6;
+  font-size: 13px;
+  padding-left: 4px;
+}
+
+/* Actions in Table */
+.table-actions-cell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  padding-right: 4px;
 }
 
 /* ═══════════════════════════════════════════════
@@ -1644,11 +1879,11 @@ body {
   }
 
   .btn-logout {
-    padding: 4px 10px;
+    padding: 4px 9px;
     font-size: 11.5px;
-    background-color: #DC2626;
-    border: 1px solid #DC2626;
-    color: #FFFFFF;
+    background-color: #FEF2F2;
+    border: 1px solid #FECACA;
+    color: #B91C1C;
     border-radius: 6px;
   }
 
@@ -1767,10 +2002,22 @@ body {
     padding: 1px 4px;
   }
 
-  .filter-search-box {
+  .filter-controls-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     width: 100%;
-    min-width: 100%;
+  }
+
+  .filter-search-box {
+    flex: 1;
+    min-width: 0;
     height: 36px;
+  }
+
+  .view-mode-toggle {
+    height: 36px;
+    flex-shrink: 0;
   }
 
   /* Task Item Row */

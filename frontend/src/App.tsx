@@ -25,11 +25,13 @@ import {
   EyeOff,
   Zap,
   Users,
-  User as UserIcon
+  User as UserIcon,
+  Table as TableIcon,
+  List as ListIcon
 } from 'lucide-react';
 import api from './api';
-import iconImg from './assets/icon.png';
-import heroLogoImg from './assets/hero-logo.png';
+import iconImg from './assets/icon.avif';
+import heroLogoImg from './assets/hero-logo.avif';
 import './App.css';
 
 /* ─── Types ─── */
@@ -150,6 +152,14 @@ export default function App() {
   /* Task Filters */
   const [searchQuery, setSearchQuery] = useState('');
   const [currentFilter, setCurrentFilter] = useState<'all' | 'pending' | 'in_progress' | 'completed'>('all');
+  const [viewMode, setViewMode] = useState<'table' | 'list'>(() => {
+    return (localStorage.getItem('task_on_view_mode') as 'table' | 'list') || 'table';
+  });
+
+  const handleSetViewMode = (mode: 'table' | 'list') => {
+    setViewMode(mode);
+    localStorage.setItem('task_on_view_mode', mode);
+  };
 
   /* Edit Modal */
   const [editingTask, setEditingTask] = useState<Task | null>(null);
@@ -839,19 +849,44 @@ export default function App() {
                   </button>
                 </div>
 
-                <div className="filter-search-box">
-                  <Search size={14} strokeWidth={1.8} className="search-icon" />
-                  <input
-                    type="text"
-                    className="search-input"
-                    placeholder="Filter…"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
+                <div className="filter-controls-right">
+                  <div className="filter-search-box">
+                    <Search size={14} strokeWidth={1.8} className="search-icon" />
+                    <input
+                      type="text"
+                      className="search-input"
+                      placeholder="Filter…"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="view-mode-toggle" role="group" aria-label="Task layout view">
+                    <button
+                      type="button"
+                      className={`view-mode-btn ${viewMode === 'table' ? 'active' : ''}`}
+                      onClick={() => handleSetViewMode('table')}
+                      title="Switch to Visual Table View"
+                      aria-pressed={viewMode === 'table'}
+                    >
+                      <TableIcon size={13} strokeWidth={2} />
+                      <span>Table</span>
+                    </button>
+                    <button
+                      type="button"
+                      className={`view-mode-btn ${viewMode === 'list' ? 'active' : ''}`}
+                      onClick={() => handleSetViewMode('list')}
+                      title="Switch to Compact List View"
+                      aria-pressed={viewMode === 'list'}
+                    >
+                      <ListIcon size={13} strokeWidth={2} />
+                      <span>List</span>
+                    </button>
+                  </div>
                 </div>
               </section>
 
-              {/* 6. Task List & Empty State */}
+              {/* 6. Task List & Table View */}
               <section className="task-list-section">
                 <AnimatePresence mode="popLayout">
                   {filteredTasks.length === 0 ? (
@@ -864,8 +899,98 @@ export default function App() {
                       <h3 className="empty-title">No tasks yet</h3>
                       <p className="empty-subtitle">Use the bar above to create one.</p>
                     </motion.div>
+                  ) : viewMode === 'table' ? (
+                    <motion.div
+                      key="tasks-table-view"
+                      className="tasks-table-container"
+                      layout
+                      {...subtleFade}
+                    >
+                      <table className="tasks-table">
+                        <thead>
+                          <tr>
+                            <th className="th-col-check">Done</th>
+                            <th className="th-col-title">Task Title</th>
+                            <th className="th-col-status">Status</th>
+                            <th className="th-col-priority">Priority</th>
+                            <th className="th-col-date">Due Date</th>
+                            <th className="th-col-actions">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {filteredTasks.map((task) => (
+                            <tr
+                              key={task._id}
+                              className={`tasks-table-row ${task.status === 'Completed' ? 'is-completed' : ''}`}
+                            >
+                              <td className="td-col-check">
+                                <button
+                                  type="button"
+                                  className={`task-checkbox ${task.status === 'Completed' ? 'checked' : ''}`}
+                                  onClick={() => handleToggleTask(task)}
+                                  aria-label={task.status === 'Completed' ? 'Mark pending' : 'Mark completed'}
+                                >
+                                  {task.status === 'Completed' && (
+                                    <Check size={12} strokeWidth={2.8} />
+                                  )}
+                                </button>
+                              </td>
+                              <td className="td-col-title">
+                                <span className="table-task-title">{task.title}</span>
+                              </td>
+                              <td className="td-col-status">
+                                <span className={`table-status-pill status-${task.status.toLowerCase().replace(/\s+/g, '-')}`}>
+                                  <span className="status-dot-indicator" />
+                                  {task.status}
+                                </span>
+                              </td>
+                              <td className="td-col-priority">
+                                <span className={`priority-tag priority-${task.priority.toLowerCase()}`}>
+                                  {task.priority}
+                                </span>
+                              </td>
+                              <td className="td-col-date">
+                                {task.dueDate ? (
+                                  <span className="table-date-badge">
+                                    <CalendarIcon size={12} strokeWidth={1.8} />
+                                    {task.dueDate}
+                                  </span>
+                                ) : (
+                                  <span className="table-empty-val">—</span>
+                                )}
+                              </td>
+                              <td className="td-col-actions">
+                                <div className="table-actions-cell">
+                                  <button
+                                    type="button"
+                                    className="action-icon-btn edit-btn"
+                                    onClick={() => setEditingTask(task)}
+                                    title="Edit task"
+                                  >
+                                    <Edit3 size={14} strokeWidth={1.8} />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="action-icon-btn delete-btn"
+                                    onClick={() => handleDeleteTask(task._id)}
+                                    title="Delete task"
+                                  >
+                                    <Trash2 size={14} strokeWidth={1.8} />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </motion.div>
                   ) : (
-                    <div className="tasks-container-card">
+                    <motion.div
+                      key="tasks-list-view"
+                      className="tasks-container-card"
+                      layout
+                      {...subtleFade}
+                    >
                       {filteredTasks.map((task) => (
                         <motion.div
                           key={task._id}
@@ -922,7 +1047,7 @@ export default function App() {
                           </div>
                         </motion.div>
                       ))}
-                    </div>
+                    </motion.div>
                   )}
                 </AnimatePresence>
               </section>
